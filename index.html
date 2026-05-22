@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Tymebank</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: #1b1b1b;
+    color: white;
+}
+
+/* ================= LOGIN ================= */
+.container {
+    padding: 40px 20px 20px;
+    text-align: center;
+}
+
+.logo img {
+    width: 240px;
+    margin-bottom: 70px;
+}
+
+.app-name {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.welcome {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.subtext {
+    color: #cfcfcf;
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 30px;
+}
+
+.login-btn {
+    background: #ffc107;
+    border: none;
+    padding: 14px;
+    width: 100%;
+    max-width: 300px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.forgot {
+    color: #ffc107;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.help {
+    margin-top: 35px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.help span {
+    color: #ffc107;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 40px;
+}
+
+.grid-item {
+    border-top: 1px solid #2e2e2e;
+    border-right: 1px solid #2e2e2e;
+    padding: 30px 10px;
+    text-align: center;
+}
+
+.grid-item:nth-child(even) {
+    border-right: none;
+}
+
+.icon {
+    font-size: 28px;
+    color: #ffc107;
+    margin-bottom: 10px;
+}
+
+/* ================= PIN ================= */
+.screen {
+    display: none;
+    height: 100vh;
+}
+
+#loginScreen {
+    display: block;
+}
+
+#pinScreen {
+    background: #000;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.pin-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pin-box {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    line-height: 40px;
+    font-size: 22px;
+}
+
+/* blinking cursor */
+@keyframes blink {
+    0%, 50% { border-color: #ffc107; }
+    51%, 100% { border-color: #555; }
+}
+
+.pin-box.active {
+    animation: blink 1s infinite;
+}
+
+/* typing bounce */
+@keyframes dotPop {
+    0% { transform: scale(0.6); opacity: 0.3; }
+    60% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+.pin-box.filled {
+    animation: dotPop 0.2s ease;
+}
+
+/* shake */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+}
+
+.pin-container.shake {
+    animation: shake 0.35s ease;
+}
+
+#pinInput {
+    position: absolute;
+    opacity: 0;
+}
+
+/* ================= LOADING ================= */
+#loadingScreen {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #000;
+    height: 100vh;
+}
+
+.loader {
+    border: 4px solid #333;
+    border-top: 4px solid #ffc107;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* ================= DASHBOARD ================= */
+#dashboardScreen {
+    background: #121212;
+    padding: 20px;
+}
+
+.header {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #ffc107;
+}
+
+.card {
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.grid-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.grid-dashboard div {
+    background: #1e1e1e;
+    padding: 20px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="screen" id="loginScreen">
+
+<div class="container">
+
+    <div class="logo">
+        <img src="https://i.ibb.co/PZkvbTsj/Tymebank-logo-Jpg.jpg">
+    </div>
+
+    <div class="app-name">Welcome</div>
+
+    <div class="welcome">Nthabiseng Pascalina Mofokeng</div>
+
+    <div class="subtext">
+        Access your profile and transact<br>
+        on your accounts
+    </div>
+
+    <button class="login-btn" onclick="goToPIN()">LOGIN</button>
+
+    <div class="forgot">Forgot your login PIN?</div>
+
+    <div class="help">Need help? <span>Contact Us</span></div>
+
+</div>
+
+<div class="grid">
+    <div class="grid-item">
+        <div class="icon">◎</div>
+        Add to Goal
+    </div>
+
+    <div class="grid-item">
+        <div class="icon">👤</div>
+        Pay someone
+    </div>
+
+    <div class="grid-item">
+        <div class="icon">🛒</div>
+        Buy
+    </div>
+
+    <div class="grid-item">
+        <div class="icon">💳</div>
+        Cash
+    </div>
+</div>
+
+</div>
+
+<!-- PIN -->
+<div class="screen" id="pinScreen">
+
+<div style="margin-top:40px;">Enter your login PIN</div>
+
+<div class="pin-container">
+    <div class="pin-box"></div>
+    <div class="pin-box"></div>
+    <div class="pin-box"></div>
+    <div class="pin-box"></div>
+</div>
+
+<input type="password" id="pinInput" maxlength="4">
+</div>
+
+<!-- LOADING -->
+<div class="screen" id="loadingScreen">
+    <div class="loader"></div>
+    <div style="margin-top:15px;">Loading...</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="screen" id="dashboardScreen">
+
+<div class="header">
+    Hi! Nthabiseng Pascalina Mofokeng
+    <div style="font-size:14px;color:#aaa;">
+        Login Time: <span id="loginTime"></span>
+    </div>
+</div>
+
+<div class="card">💰 Balance: R 13 348 788,00</div>
+<div class="card">🏦 Account: Offshore Reserve</div>
+
+<div class="grid-dashboard">
+    <div>Transfer</div>
+    <div onclick="window.location.href='https://zfrmz.com/YEAh3yYqptumbgtyDjqf'">Pay</div>
+    <div>Buy</div>
+    <div>History</div>
+</div>
+
+</div>
+
+<script>
+
+const screens = {
+    login: document.getElementById("loginScreen"),
+    pin: document.getElementById("pinScreen"),
+    loading: document.getElementById("loadingScreen"),
+    dashboard: document.getElementById("dashboardScreen")
+};
+
+const input = document.getElementById("pinInput");
+const boxes = document.querySelectorAll(".pin-box");
+
+const CORRECT_PIN = "9332";
+let timer;
+
+function show(screen) {
+    Object.values(screens).forEach(s => s.style.display = "none");
+    screen.style.display = screen === screens.loading ? "flex" : "block";
+}
+
+function goToPIN() {
+    show(screens.pin);
+}
+
+input.addEventListener("input", () => {
+
+    let value = input.value.replace(/\D/g, "").slice(0,4);
+    input.value = value;
+
+    boxes.forEach((b, i) => {
+
+        if (value[i]) {
+            if (!b.classList.contains("filled")) {
+                b.classList.remove("filled");
+                void b.offsetWidth;
+                b.classList.add("filled");
+            }
+            b.textContent = "•";
+        } else {
+            b.textContent = "";
+            b.classList.remove("filled");
+        }
+
+        b.classList.remove("active");
+    });
+
+    if (value.length < 4) {
+        boxes[value.length]?.classList.add("active");
+    }
+
+    if (value.length === 4) {
+
+        if (value === CORRECT_PIN) {
+
+            show(screens.loading);
+
+            setTimeout(() => {
+                show(screens.dashboard);
+
+                timer = setInterval(() => {
+                    document.getElementById("loginTime").textContent =
+                        new Date().toLocaleTimeString();
+                }, 1000);
+
+            }, 2000);
+
+        } else {
+            input.value = "";
+
+            const container = document.querySelector(".pin-container");
+            container.classList.remove("shake");
+            void container.offsetWidth;
+            container.classList.add("shake");
+
+            boxes.forEach(b => {
+                b.textContent = "";
+                b.classList.remove("filled");
+            });
+        }
+    }
+});
+
+document.body.addEventListener("click", () => input.focus());
+
+</script>
+
+</body>
+</html>
